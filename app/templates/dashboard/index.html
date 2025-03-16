@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block head %}
+{{ super() }}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Map Section -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-900">Location Dashboard</h2>
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2">
+                        <span id="locationStatus" class="text-sm text-gray-500">Ready to connect</span>
+                        <div id="locationIndicator" class="w-3 h-3 bg-gray-400 rounded-full"></div>
+                    </div>
+                    <button 
+                        id="addLocationBtn"
+                        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Add Location
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Server Content Container -->
+            <div id="serverContent" class="w-full min-h-screen"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+function updateStatusIndicator(status, color) {
+    document.getElementById('locationStatus').textContent = status;
+    document.getElementById('locationIndicator').className = `w-3 h-3 ${color} rounded-full`;
+}
+
+function connectToDriverServer() {
+    updateStatusIndicator('Connecting to server...', 'bg-yellow-400');
+    
+    // Directly open the server URL
+    window.location.href = 'http://192.168.23.61:5001/driver_connect';
+}
+
+// Add event listener for the button
+document.getElementById('addLocationBtn').addEventListener('click', function(e) {
+    e.preventDefault();
+    connectToDriverServer();
+});
+</script>
+{% endblock %} 

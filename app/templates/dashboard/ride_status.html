@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block head %}
+{{ super() }}
+<style>
+.loader {
+    width: 48px;
+    height: 48px;
+    border: 5px solid #FFF;
+    border-bottom-color: #3B82F6;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.outcome {
+    display: none;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 flex items-center justify-center">
+    <div class="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
+        <!-- Loader -->
+        <div id="loaderSection" class="py-8">
+            <span class="loader"></span>
+            <p class="mt-4 text-lg text-gray-600">Processing your ride request...</p>
+        </div>
+
+        <!-- Success Outcome -->
+        <div id="successOutcome" class="outcome py-8">
+            <svg class="mx-auto h-16 w-16 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            <h2 class="mt-4 text-2xl font-bold text-gray-900">Trip Completed!</h2>
+            <p class="mt-2 text-gray-600">The ride has been completed successfully.</p>
+            <button onclick="window.location.href='/dashboard'" class="mt-6 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                Return to Dashboard
+            </button>
+        </div>
+
+        <!-- Cancel Outcome -->
+        <div id="cancelOutcome" class="outcome py-8">
+            <svg class="mx-auto h-16 w-16 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+            <h2 class="mt-4 text-2xl font-bold text-gray-900">Trip Cancelled</h2>
+            <p class="mt-2 text-gray-600">The rider has cancelled the trip.</p>
+            <button onclick="window.location.href='/dashboard'" class="mt-6 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                Return to Dashboard
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Wait for 3 seconds
+    setTimeout(() => {
+        // Hide loader
+        document.getElementById('loaderSection').style.display = 'none';
+        
+        // Randomly decide outcome (50-50 chance)
+        const isCompleted = Math.random() < 0.5;
+        
+        // Show the appropriate outcome
+        const outcomeElement = document.getElementById(isCompleted ? 'successOutcome' : 'cancelOutcome');
+        outcomeElement.style.display = 'block';
+        
+        // Send status to server
+        fetch('http://192.168.23.61:5001/ride_status', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                status: isCompleted ? 'completed' : 'cancelled'
+            })
+        })
+        .then(response => response.json())
+        .then(data => console.log('Status updated:', data))
+        .catch(error => console.error('Error:', error));
+    }, 3000);
+});
+</script>
+{% endblock %} 

@@ -1,0 +1,44 @@
+<svg width="800" height="400" viewBox="0 0 800 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Map Background -->
+    <rect width="800" height="400" fill="#F8FAFC"/>
+    
+    <!-- Map Grid -->
+    <g opacity="0.1">
+        <path d="M0 50h800 M0 150h800 M0 250h800 M0 350h800" stroke="#94A3B8" stroke-width="1"/>
+        <path d="M100 0v400 M300 0v400 M500 0v400 M700 0v400" stroke="#94A3B8" stroke-width="1"/>
+    </g>
+    
+    <!-- Map Roads -->
+    <path d="M200 100q100-50 200 0t200 50" stroke="#E2E8F0" stroke-width="20" opacity="0.3"/>
+    <path d="M100 250q150-100 300 0t300 100" stroke="#E2E8F0" stroke-width="20" opacity="0.3"/>
+    
+    <!-- Location Markers -->
+    <g opacity="0.6">
+        <circle cx="300" cy="150" r="8" fill="#EF4444"/>
+        <circle cx="500" cy="200" r="8" fill="#EF4444"/>
+        <circle cx="400" cy="300" r="8" fill="#EF4444"/>
+    </g>
+    
+    <!-- Driver Figure -->
+    <g transform="translate(350, 150)">
+        <!-- Head -->
+        <circle cx="50" cy="50" r="30" fill="#4F46E5"/>
+        
+        <!-- Body -->
+        <path d="M50 80v60" stroke="#4F46E5" stroke-width="10" stroke-linecap="round"/>
+        
+        <!-- Arms -->
+        <path d="M50 100l-20-15m20 15l20-15" stroke="#4F46E5" stroke-width="8" stroke-linecap="round"/>
+        
+        <!-- Legs -->
+        <path d="M50 140l-15 30m15-30l15 30" stroke="#4F46E5" stroke-width="8" stroke-linecap="round"/>
+        
+        <!-- Phone/Device -->
+        <rect x="35" y="90" width="30" height="40" rx="5" fill="#3B82F6"/>
+        <rect x="40" y="95" width="20" height="25" rx="2" fill="#E8F4FF"/>
+    </g>
+    
+    <!-- Circular Pulse Animation -->
+    <circle cx="400" cy="200" r="100" stroke="#4F46E5" stroke-width="2" stroke-dasharray="4 4" opacity="0.2"/>
+    <circle cx="400" cy="200" r="150" stroke="#4F46E5" stroke-width="2" stroke-dasharray="4 4" opacity="0.1"/>
+</svg> 

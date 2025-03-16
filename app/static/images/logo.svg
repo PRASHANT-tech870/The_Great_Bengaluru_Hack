@@ -1,0 +1,13 @@
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Circle background -->
+    <circle cx="20" cy="20" r="20" fill="#4F46E5"/>
+    
+    <!-- Stylized "NY" for Namma Yatri -->
+    <path d="M12 10l4 12 4-12h4l-6 20h-4l2-6-4-14h4z" fill="white"/>
+    <path d="M26 10l-4 8 4 12h-4l-2-6 2-14h4z" fill="white"/>
+    
+    <!-- Auto rickshaw silhouette -->
+    <path d="M8 24h24v-4H8v4z" fill="white" fill-opacity="0.3"/>
+    <circle cx="11" cy="26" r="2" fill="white" fill-opacity="0.3"/>
+    <circle cx="29" cy="26" r="2" fill="white" fill-opacity="0.3"/>
+</svg> 

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Namma Yatri{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="{{ url_for('main.index') }}" class="flex items-center text-xl font-bold text-blue-600">
+                        <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="Namma Yatri" class="h-10 w-auto mr-2">
+                        <span class="font-poppins sr-only">Namma Yatri</span>
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="{{ url_for('main.about') }}" class="text-gray-600 hover:text-gray-900">About</a>
+                    <a href="{{ url_for('main.features') }}" class="text-gray-600 hover:text-gray-900">Features</a>
+                    <a href="{{ url_for('main.contact') }}" class="text-gray-600 hover:text-gray-900">Contact</a>
+                    {% if current_user.is_authenticated %}
+                        <a href="{{ url_for('main.dashboard') }}" class="text-gray-600 hover:text-gray-900">Dashboard</a>
+                        <a href="{{ url_for('auth.logout') }}" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Logout</a>
+                    {% else %}
+                        <a href="{{ url_for('auth.login') }}" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Login</a>
+                        <a href="{{ url_for('auth.register') }}" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">Sign Up</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html> 
