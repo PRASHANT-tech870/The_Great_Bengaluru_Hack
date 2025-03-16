@@ -1,8 +1,8 @@
-#Ride-Hailing Platform - Solving Namma Yatri's Problem!
+# Ride-Hailing Platform - Solving Namma Yatri's Problem!
 
 A dynamic ride-hailing platform that optimizes driver allocation and passenger pickup in high-demand areas using hexagonal geospatial mapping.
 
-![NYC Ride-Hailing Platform](https://i.imgur.com/placeholder.jpg)
+![Ride-Hailing Platform](image.png)
 
 ## Table of Contents
 
