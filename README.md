@@ -4,6 +4,39 @@ A dynamic ride-hailing platform that optimizes driver allocation and passenger p
 
 ![Ride-Hailing Platform](https://media.assettype.com/newindianexpress/2024-07/d44f15fc-fea5-44fe-925b-143f99547de8/namma%20yatri.jpg)
 
+## Server
+
+<img width="1511" alt="Screenshot 2025-03-16 at 11 28 26 AM" src="https://github.com/user-attachments/assets/a3eb88ad-86c4-41cd-aaac-2a35ef808328" />
+
+
+
+## Driver
+
+<img width="1512" alt="Screenshot 2025-03-16 at 11 28 57 AM" src="https://github.com/user-attachments/assets/41a71ece-432c-4308-ad99-887731c8ddf7" />
+
+<img width="500" alt="Screenshot 2025-03-16 at 11 29 14 AM" src="https://github.com/user-attachments/assets/681bb85e-874b-44f4-9415-8cb9928e9cba" />
+
+
+
+## Driver leaderBoard
+
+<img width="1508" alt="image" src="https://github.com/user-attachments/assets/c02f5502-6026-47af-ab0a-a210e89514fd" />
+
+<img width="1436" alt="image" src="https://github.com/user-attachments/assets/08494fdc-15b2-4a13-bd80-b09f586a5b4a" />
+
+
+
+## Passenger
+
+<img width="1511" alt="Screenshot 2025-03-16 at 11 30 07 AM" src="https://github.com/user-attachments/assets/f1612606-b18a-4dd3-adf2-a0b6770c31da" />
+
+<img width="601" alt="Screenshot 2025-03-16 at 11 30 27 AM" src="https://github.com/user-attachments/assets/bf0dc831-8cfd-412d-bf89-ec05e750ea9d" />
+
+<img width="595" alt="Screenshot 2025-03-16 at 11 30 36 AM" src="https://github.com/user-attachments/assets/20d5f688-0a09-4064-9f77-acc02b1f8a73" />
+
+
+
+
 
 ## Table of Contents
 
