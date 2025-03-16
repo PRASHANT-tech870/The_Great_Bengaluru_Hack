@@ -2,7 +2,7 @@
 
 A dynamic ride-hailing platform that optimizes driver allocation and passenger pickup in high-demand areas using hexagonal geospatial mapping.
 
-![Ride-Hailing Platform](image.png)
+![Ride-Hailing Platform](https://www.google.com/imgres?q=namma%20yatri&imgurl=https%3A%2F%2Fmedia.assettype.com%2Fnewindianexpress%252F2024-07%252Fd44f15fc-fea5-44fe-925b-143f99547de8%252Fnamma%2520yatri.jpg&imgrefurl=https%3A%2F%2Fwww.newindianexpress.com%2Fbusiness%2F2024%2FJul%2F16%2Fbengaluru-based-namma-yatri-raises-rs-92-crore-funding-from-google-antler-and-others&docid=LhDPdxX-uLxNJM&tbnid=5O23Ug_a5AS5YM&vet=12ahUKEwiXpczu2Y2MAxUjxjgGHVpXOmkQM3oECFsQAA..i&w=1174&h=872&hcb=2&ved=2ahUKEwiXpczu2Y2MAxUjxjgGHVpXOmkQM3oECFsQAA)
 
 ## Table of Contents
 
