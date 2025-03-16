@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-Frame-Options" content="ALLOWALL">
+    <meta http-equiv="Content-Security-Policy" content="frame-ancestors *">
+    <title>Driver Map View</title>
+    
+    <!-- Add references to Azure Maps Map control JavaScript and CSS files -->
+    <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.css" type="text/css" />
+    <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
+    
+    <!-- Add jQuery for AJAX calls -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Add Bootstrap for styling -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        
+        #mapContainer {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+        }
+        
+        #driverMap {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .legend {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            width: 200px;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            z-index: 1000;
+        }
+        
+        .legend-item {
+            margin-bottom: 5px;
+        }
+        
+        .legend-color {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+        
+        .driver-info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 15px;
+            font-family: Arial, sans-serif;
+            z-index: 1000;
+            max-width: 300px;
+        }
+        
+        .pickup-list {
+            margin-top: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .pickup-item {
+            padding: 8px;
+            margin-bottom: 5px;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #007bff;
+        }
+        
+        .pickup-item h4 {
+            margin: 0 0 5px 0;
+            font-size: 14px;
+        }
+        
+        .pickup-item p {
+            margin: 0;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div id="mapContainer">
+        <div id="driverMap" style="width: 100%; height: 100vh;"></div>
+        
+        <div class="driver-info">
+            <h3>Driver View</h3>
+            <p><strong>Driver ID:</strong> <span id="driverIdDisplay">{{ driver_id }}</span></p>
+            <p><strong>Time Slot:</strong> {{ time_slot }}</p>
+            <p><strong>Status:</strong> <span id="driverStatus"></span></p>
+            
+            <div class="driver-stats">
+                <h4>Driver Statistics</h4>
+                <p><strong>Peak Hour Rides:</strong> {{ driver_data.no_of_peak_hrs_rides }}</p>
+                <p><strong>Trust Score:</strong> <span class="badge {% if driver_data.trust_score >= 90 %}bg-success{% elif driver_data.trust_score >= 70 %}bg-warning{% else %}bg-danger{% endif %}">{{ driver_data.trust_score }}/100</span></p>
+                <p><strong>Commit Points:</strong> {{ driver_data.commit_points }}</p>
+                <p><strong>Cancellations:</strong> {{ driver_data.no_of_cancellations }}</p>
+            </div>
+            
+            <div id="pickupOptions" style="display: none;">
+                <div class="pickup-list">
+                    <h4>Recommended Pickup Points:</h4>
+                    <div id="pickupListContainer">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <span class="legend-color" style="background-color: red;"></span>
+                High Demand
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background-color: green;"></span>
+                Low Demand
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background-color: blue; border-radius: 50%;"></span>
+                Available Driver
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background-color: orange; border-radius: 50%;"></span>
+                Notified Driver
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background-color: yellow; border-radius: 50%;"></span>
+                You (Connected)
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background-color: purple; border-radius: 50%;"></span>
+                Pickup Points
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background-color: #FF5733; height: 3px;"></span>
+                Optimal Route (via Azure Maps)
+            </div>
+        </div>
+    </div>
+    
+    <script>
+    // Global variables with data from the server
+    const AZURE_MAPS_KEY = "{{ azure_maps_key }}";
+    const driverId = "{{ driver_id }}";
+    const isNearHighDemand = {{ 'true' if is_near_high_demand else 'false' }};
+    
+    // Parse the GeoJSON data from the server
+    const hexagonGeoJson = {{ hexagon_geojson|tojson }};
+    const driverGeoJson = {{ driver_geojson|tojson }};
+    const pickupGeoJson = {{ pickup_geojson|tojson }};
+    const routeGeoJson = {{ route_geojson|tojson }};
+    
+    // Initialize the map when the page loads
+    $(document).ready(function() {
+        console.log("Document ready, loading driver.js");
+        loadDriverScript();
+    });
+    
+    function loadDriverScript() {
+        // Dynamically load the driver.js script
+        const script = document.createElement('script');
+        script.src = "{{ url_for('static', filename='js/driver.js') }}";
+        script.onload = function() {
+            // Call the initialization function after the script is loaded
+            console.log("Driver script loaded, initializing driver map");
+            initializeDriverMap();
+        };
+        document.body.appendChild(script);
+    }
+    </script>
+
+    <script>
+    // Add event listeners to all buttons for iframe communication
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('click', () => {
+                window.parent.postMessage('button_clicked', '*');
+            });
+        });
+    });
+    </script>
+</body>
+</html>

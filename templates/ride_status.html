@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-Frame-Options" content="ALLOWALL">
+    <meta http-equiv="Content-Security-Policy" content="frame-ancestors *">
+    <title>Ride Status</title>
+    
+    <!-- Add jQuery for AJAX calls -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Add Bootstrap for styling -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        
+        .status-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .result-container {
+            display: none;
+        }
+        
+        .success-icon {
+            color: #28a745;
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+        
+        .cancel-icon {
+            color: #dc3545;
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+        
+        .driver-info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="status-container">
+        <div id="loadingContainer" class="loading-container">
+            <div class="spinner"></div>
+            <h3>Processing Ride...</h3>
+            <p>Please wait while we update your ride status</p>
+        </div>
+        
+        <div id="completedContainer" class="result-container">
+            <div class="success-icon">✓</div>
+            <h2>Trip Completed Successfully!</h2>
+            <p>Thank you for using our service.</p>
+            <p><strong>Distance Traveled:</strong> {{ "%.2f"|format(distance_km) }} km</p>
+            <div class="driver-info">
+                <h4>Driver Information</h4>
+                <p><strong>Driver ID:</strong> {{ driver_id }}</p>
+                <p><strong>Peak Hour Rides:</strong> {{ driver_data.no_of_peak_hrs_rides }}</p>
+                <p><strong>Trust Score:</strong> <span class="badge {% if driver_data.trust_score >= 90 %}bg-success{% elif driver_data.trust_score >= 70 %}bg-warning{% else %}bg-danger{% endif %}">{{ driver_data.trust_score }}/100</span></p>
+                <p><strong>Commit Points:</strong> {{ driver_data.commit_points }}</p>
+                <p><strong>Cancellations:</strong> {{ driver_data.no_of_cancellations }}</p>
+                <p><strong>Total Distance Traveled:</strong> {{ "%.2f"|format(driver_data.distance_traveled) }} km</p>
+            </div>
+            <button class="btn btn-primary mt-3" onclick="window.location.href='/'">Return to Home</button>
+        </div>
+        
+        <div id="canceledContainer" class="result-container">
+            <div class="cancel-icon">✗</div>
+            <h2>Trip Canceled by Driver</h2>
+            <p>We apologize for the inconvenience.</p>
+            <div class="driver-info">
+                <h4>Driver Information</h4>
+                <p><strong>Driver ID:</strong> {{ driver_id }}</p>
+                <p><strong>Peak Hour Rides:</strong> {{ driver_data.no_of_peak_hrs_rides }}</p>
+                <p><strong>Trust Score:</strong> <span class="badge {% if driver_data.trust_score >= 90 %}bg-success{% elif driver_data.trust_score >= 70 %}bg-warning{% else %}bg-danger{% endif %}">{{ driver_data.trust_score }}/100</span></p>
+                <p><strong>Commit Points:</strong> {{ driver_data.commit_points }}</p>
+                <p><strong>Cancellations:</strong> {{ driver_data.no_of_cancellations }}</p>
+            </div>
+            <button class="btn btn-primary mt-3" onclick="window.location.href='/'">Return to Home</button>
+        </div>
+    </div>
+    
+    <script>
+        // Show random result after a delay
+        $(document).ready(function() {
+            // Wait for 3 seconds
+            setTimeout(function() {
+                // Hide loading container
+                $("#loadingContainer").hide();
+                
+                // Randomly show either completed or canceled
+                const outcome = "{{ outcome }}";
+                if (outcome === "completed") {
+                    $("#completedContainer").show();
+                } else {
+                    $("#canceledContainer").show();
+                }
+                
+                // Send message to parent iframe
+                window.parent.postMessage('status_updated', '*');
+            }, 3000);
+        });
+    </script>
+    
+    <script>
+        // Add event listeners to all buttons for iframe communication
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('button').forEach(button => {
+                button.addEventListener('click', () => {
+                    window.parent.postMessage('button_clicked', '*');
+                });
+            });
+        });
+    </script>
+</body>
+</html> 
